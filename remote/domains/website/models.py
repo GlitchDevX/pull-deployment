@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 from pydantic import Field
 from domains.shared.models import BaseBody
@@ -10,7 +11,17 @@ class WebsiteBody(BaseBody):
   # thought here is to use the gh token in the action, but the downside would be an overpriviliged token because of required write permission
   access_token: str | None = Field(default=None, description="Access token to have pull access on the temporary branch")
 
+class WebsiteResponse(BaseBody):
+  result: str
+
 class Deployment(BaseModel):
-  deployment_id: str = Field(description="Identifier of deployment to trigger")
-  deployment_secret: str = Field(description="Secret of deployment to trigger")
+  id: str = Field(description="Identifier of deployment to trigger")
+  secret: str = Field(description="Secret of deployment to trigger")
+  
+  remote: str = Field(description="Remote the temporary branch is located at")
   access_token: str | None = Field(default=None, description="Access token to have pull access on the temporary branch")
+
+  target_dir: str = Field(description="Target directory to place the content of the temporary branch to")
+
+class AppConfig(BaseModel):
+  deployments: List[Deployment] = Field("List of deployments that you can trigger")

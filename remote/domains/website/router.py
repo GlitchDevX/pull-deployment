@@ -6,4 +6,4 @@ router = APIRouter()
 
 @router.put("/deploy-website")
 def deploy_website_endpoint(body: WebsiteBody):
-  deploy_website(body)
+  return deploy_website(body)
