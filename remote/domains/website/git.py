@@ -22,4 +22,4 @@ def _pull_to_temp_dir(tmp_dir: str, branch_name: str, deployment: Deployment):
   rmtree(f"{tmp_dir}/.git", ignore_errors=True)
 
 def _copy_to_target_dir(tmp_dir: str, target_dir: str):
-  copytree(tmp_dir, target_dir)
+  copytree(tmp_dir, target_dir, dirs_exist_ok=True)
