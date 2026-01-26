@@ -7,3 +7,10 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.128.0",
 ]
+
+[tool.pyrefly]
+project-includes = ["domains/**", "main.py"]
+project-excludes = [
+    "**/__pycache__",
+    "**/*venv/**/*",
+]
