@@ -6,10 +6,12 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.128.0",
+    "pytest>=9.0.2",
+    "pytest-mock>=3.15.1",
 ]
 
 [tool.pyrefly]
-project-includes = ["domains/**", "main.py"]
+project-includes = ["domains/**", "tests/**", "main.py"]
 project-excludes = [
     "**/__pycache__",
     "**/*venv/**/*",
