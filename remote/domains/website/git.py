@@ -1,8 +1,8 @@
-from fastapi.exceptions import HTTPException
-from shutil import rmtree, copytree
-import subprocess
-from domains.website.models import Deployment
 import tempfile
+import subprocess
+import shutil
+from fastapi.exceptions import HTTPException
+from domains.website.models import Deployment
 
 def pull_temp_branch(branch_name: str, deployment: Deployment):
   with tempfile.TemporaryDirectory() as tmp_dir:
@@ -19,7 +19,7 @@ def _pull_to_temp_dir(tmp_dir: str, branch_name: str, deployment: Deployment):
   if result.returncode != 0:
     raise HTTPException(status_code=404, detail="Temporary branch not found")
   
-  rmtree(f"{tmp_dir}/.git", ignore_errors=True)
+  shutil.rmtree(f"{tmp_dir}/.git", ignore_errors=True)
 
 def _copy_to_target_dir(tmp_dir: str, target_dir: str):
-  copytree(tmp_dir, target_dir, dirs_exist_ok=True)
+  shutil.copytree(tmp_dir, target_dir, dirs_exist_ok=True)

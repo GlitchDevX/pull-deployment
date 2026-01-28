@@ -1,6 +1,3 @@
-import tempfile
-from unittest.mock import MagicMock
-
 from domains.website.models import Deployment
 import pytest
 from domains.website.git import pull_temp_branch
@@ -48,5 +45,5 @@ def test_pull_temp_branch(mock_subprocess, deployment_stub, mock_tmp_dir, mock_c
 
     expected_args = ["git", "clone", "-b", given_branch_name, "--depth", "1", "https://github.com/torvalds/linux", "."]
     mock_subprocess.assert_called_once_with(expected_args, cwd=TMP_TEST_DIR)
-    # mock_rmtree.assert_called_once_with(TMP_TEST_DIR + "/.git")
-    # mock_copytree.assert_called_once_with(TMP_TEST_DIR, deployment_stub.target_dir)
+    mock_rmtree.assert_called_once_with(TMP_TEST_DIR + "/.git", ignore_errors=True)
+    mock_copytree.assert_called_once_with(TMP_TEST_DIR, deployment_stub.target_dir, dirs_exist_ok=True)
