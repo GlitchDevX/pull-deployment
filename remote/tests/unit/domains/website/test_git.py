@@ -14,12 +14,8 @@ def mock_tmp_dir(mocker: MockerFixture):
     return mock
 
 @pytest.fixture
-def mock_subprocess_success(mocker: MockerFixture):
-    return mocker.patch("subprocess.run", return_value=mocker.Mock(returncode=0))
-
-@pytest.fixture
-def mock_subprocess_fail(mocker: MockerFixture):
-    return mocker.patch("subprocess.run", return_value=mocker.Mock(returncode=1))
+def mock_subprocess(mocker: MockerFixture):
+    return mocker.patch("subprocess.run")
 
 @pytest.fixture(autouse=True)
 def mock_rmtree(mocker: MockerFixture):
@@ -39,22 +35,24 @@ def deployment_stub():
     )
 
 
-def test_should_pull_temp_branch(mock_subprocess_success, deployment_stub, mock_tmp_dir, mock_copytree, mock_rmtree):
+def test_should_pull_temp_branch(mocker: MockerFixture, deployment_stub, mock_subprocess, mock_tmp_dir, mock_copytree, mock_rmtree):
+    mock_subprocess.return_value = mocker.Mock(returncode=0)
     given_branch_name = "example-deployment-1234"
 
     pull_temp_branch(given_branch_name, deployment_stub)
 
     expected_args = ["git", "clone", "-b", given_branch_name, "--depth", "1", "https://github.com/torvalds/linux", "."]
-    mock_subprocess_success.assert_called_once_with(expected_args, cwd=TMP_TEST_DIR)
+    mock_subprocess.assert_called_once_with(expected_args, cwd=TMP_TEST_DIR)
     mock_rmtree.assert_called_once_with(TMP_TEST_DIR + "/.git", ignore_errors=True)
     mock_copytree.assert_called_once_with(TMP_TEST_DIR, deployment_stub.target_dir, dirs_exist_ok=True)
 
-def test_should_handle_non_existent_branch(mock_subprocess_fail, deployment_stub, mock_tmp_dir, mock_copytree, mock_rmtree):
+def test_should_handle_non_existent_branch(mocker: MockerFixture, deployment_stub, mock_subprocess, mock_tmp_dir, mock_copytree, mock_rmtree):
+    mock_subprocess.return_value = mocker.Mock(returncode=1)
     given_branch_name = "non-existent-deployment-2345"
 
     pull_temp_branch(given_branch_name, deployment_stub)
 
     expected_args = ["git", "clone", "-b", given_branch_name, "--depth", "1", "https://github.com/torvalds/linux", "."]
-    mock_subprocess_fail.assert_called_once_with(expected_args, cwd=TMP_TEST_DIR)
+    mock_subprocess.assert_called_once_with(expected_args, cwd=TMP_TEST_DIR)
     mock_rmtree.assert_not_called()
     mock_copytree.assert_not_called()
