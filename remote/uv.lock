@@ -63,6 +63,15 @@ wheels = [
 ]
 
 [[package]]
+name = "coveo-ref"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/77/05/80e8bf9a5209d6402d24a1ba3bf2287558f9b88e0a934a1ab4e8f5398427/coveo_ref-2.0.1.tar.gz", hash = "sha256:672ee5e65f0a2b3c42bfa46be25d84f1bb236459b872925549046bd4dfc757d6", size = 12801, upload-time = "2025-05-23T18:30:32.415Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d8/ee/79e16a62d55ca24a6b2e00100036f125cef2082cee8059a0056c05425d3e/coveo_ref-2.0.1-py3-none-any.whl", hash = "sha256:919f3278324bf41ae0c6ac3960384c32b2ffff68091a69eabcc2364204b4de27", size = 10211, upload-time = "2025-05-23T18:30:31.196Z" },
+]
+
+[[package]]
 name = "dnspython"
 version = "2.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -579,6 +588,7 @@ name = "remote"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "coveo-ref" },
     { name = "fastapi", extra = ["standard"] },
     { name = "pytest" },
     { name = "pytest-mock" },
@@ -586,6 +596,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "coveo-ref", specifier = ">=2.0.1" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.128.0" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-mock", specifier = ">=3.15.1" },

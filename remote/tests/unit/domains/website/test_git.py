@@ -1,12 +1,15 @@
-from domains.website.models import Deployment
 import pytest
+from coveo_ref import ref
+from domains.website.models import Deployment
 from domains.website.git import pull_temp_branch
 from pytest_mock import MockerFixture
+
+from domains.website.git import subprocess, tempfile, shutil
 
 TMP_TEST_DIR = "/tmp/test_dir"
 @pytest.fixture(autouse=True)
 def mock_tmp_dir(mocker: MockerFixture):
-    mock = mocker.patch("tempfile.TemporaryDirectory")
+    mock = mocker.patch(*ref(tempfile.TemporaryDirectory))
     mock.return_value = mocker.Mock(
         __enter__=mocker.Mock(return_value=TMP_TEST_DIR),
         __exit__=mocker.Mock()
@@ -15,15 +18,15 @@ def mock_tmp_dir(mocker: MockerFixture):
 
 @pytest.fixture
 def mock_subprocess(mocker: MockerFixture):
-    return mocker.patch("subprocess.run")
+    return mocker.patch(*ref(subprocess.run))
 
 @pytest.fixture(autouse=True)
 def mock_rmtree(mocker: MockerFixture):
-    return mocker.patch("shutil.rmtree")
+    return mocker.patch(*ref(shutil.rmtree))
 
 @pytest.fixture(autouse=True)
 def mock_copytree(mocker: MockerFixture):
-    return mocker.patch("shutil.copytree")
+    return mocker.patch(*ref(shutil.copytree))
 
 @pytest.fixture
 def deployment_stub():
