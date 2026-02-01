@@ -6,7 +6,7 @@ from domains.website.models import Deployment
 from domains.website.models import WebsiteBody
 
 def deploy_website(inputs: WebsiteBody):
-  deployment = get_deployment_by_id(inputs.deployment_id)
+  deployment = _get_deployment_by_id(inputs.deployment_id)
 
   if not deployment or deployment.secret != inputs.deployment_secret:
     raise HTTPException(status_code=403)
@@ -16,7 +16,7 @@ def deploy_website(inputs: WebsiteBody):
   return WebsiteResponse(result="success")
 
 
-def get_deployment_by_id(deployment_id: str) -> Deployment | None:
+def _get_deployment_by_id(deployment_id: str) -> Deployment | None:
   all_deployments = load_config().deployments
 
   return next((deployment for deployment in all_deployments if deployment.id == deployment_id), None)

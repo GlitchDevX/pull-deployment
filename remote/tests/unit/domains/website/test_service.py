@@ -1,0 +1,47 @@
+import pytest
+from fastapi import HTTPException
+from pytest_mock import MockerFixture
+
+from domains.website.service import deploy_website
+from domains.website.models import Deployment, WebsiteBody
+
+
+@pytest.fixture
+def mock_load_config(mocker: MockerFixture):
+    given_deployment = mocker.Mock(deployments=[
+        Deployment(
+            id="example-deployment",
+            secret="example-secret",
+            remote="github.com/glitchdevx/custos",
+            access_token="secret_gh_token",
+            target_dir="var/www/custos/html"
+        )
+    ])
+    return mocker.patch("domains.website.service.load_config", return_value=given_deployment)
+
+def test_should_deploy_website(mock_load_config):
+    pass
+
+def test_should_handle_invalid_secret():
+    given_input = WebsiteBody(
+        deployment_id="example-deployment",
+        deployment_secret="wrong-secret",
+        branch_name="main"
+    )
+
+    with pytest.raises(HTTPException) as err:
+        deploy_website(given_input)
+
+    assert err.value.status_code == 403
+
+def test_should_handle_invalid_website_response():
+    given_input = WebsiteBody(
+        deployment_id="non-existent-deployment",
+        deployment_secret="example-secret",
+        branch_name="main"
+    )
+
+    with pytest.raises(HTTPException) as err:
+        deploy_website(given_input)
+
+    assert err.value.status_code == 403
