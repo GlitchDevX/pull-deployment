@@ -1,0 +1,58 @@
+name: 'Website Pull Deployment'
+description: 'Deploy your website using pull-based-deployment'
+
+inputs:
+  target-dir:
+    description: 'Directory containing content to sync'
+    required: false
+    default: 'dist'
+  deployment-id:
+    description: 'Id of the deployment'
+    required: true
+  deployment-secret:
+    description: 'Secret of the deployment'
+    required: true
+  webhook-url:
+    description: 'Url of the webhook remote'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Push Temp Branch
+      shell: bash
+      env:
+        TARGET_DIR: ${{ inputs.target-dir }}
+        RUN_ID: ${{ github.run_id }}
+      run: |
+        mv "$TARGET_DIR" .temp-deployment
+        git checkout --orphan "TEMP-DEPLOYMENT-$RUN_ID"
+        git add .temp-deployment
+        git commit -m "chore: create temporary deployment branch"
+        git push origin "TEMP-DEPLOYMENT-$RUN_ID"
+    
+    - name: Trigger Pull Deployment
+      shell: bash
+      env:
+        DEPLOYMENT_ID: ${{ inputs.deployment-id }}
+        DEPLOYMENT_SECRET: ${{ inputs.deployment-secret }}
+        WEBHOOK_URL: ${{ inputs.webhook-url }}
+        RUN_ID: ${{ github.run_id }}
+      run: |
+        curl -x PUT \
+         -H "Content-Type: application/json" \
+         -d '{ \
+          "deploymentId": "$DEPLOYMENT_ID", \
+          "deploymentSecret": "$DEPLOYMENT_SECRET" \
+          "branchName": "TEMP-DEPLOYMENT-$RUN_ID" \
+         }' "$WEBHOOK_URL"
+    
+    - name: Cleanup Temp Branch
+      shell: bash
+      env:
+        RUN_ID: ${{ github.run_id }}
+      run: |
+        git checkout main -f
+        git branch -D "TEMP-DEPLOYMENT-$RUN_ID"
+        git push origin --delete "TEMP-DEPLOYMENT-$RUN_ID"
+      
