@@ -20,39 +20,50 @@ runs:
   using: composite
   steps:
     - name: Push Temp Branch
+      id: push-temp-branch
       shell: bash
       env:
         TARGET_DIR: ${{ inputs.target-dir }}
         RUN_ID: ${{ github.run_id }}
       run: |
         mv "$TARGET_DIR" .temp-deployment
-        git checkout --orphan "TEMP-DEPLOYMENT-$RUN_ID"
+        
+        branch_name="TEMP-DEPLOYMENT-${RUN_ID}"
+        git checkout --orphan "${branch_name}"
+        
+        git reset
         git add .temp-deployment
         git commit -m "chore: create temporary deployment branch"
-        git push origin "TEMP-DEPLOYMENT-$RUN_ID"
-    
+        git push origin "${branch_name}"
+        
+        echo "branch-name=${branch_name}" >> $GITHUB_OUTPUT
+        echo "commit-sha=$(git rev-parse @)" >> $GITHUB_OUTPUT
+
     - name: Trigger Pull Deployment
       shell: bash
       env:
         DEPLOYMENT_ID: ${{ inputs.deployment-id }}
         DEPLOYMENT_SECRET: ${{ inputs.deployment-secret }}
         WEBHOOK_URL: ${{ inputs.webhook-url }}
-        RUN_ID: ${{ github.run_id }}
+        BRANCH_NAME: ${{ steps.push-temp-branch.outputs.branch-name }}
+        COMMIT_SHA: ${{ steps.push-temp-branch.outputs.commit-sha }}
       run: |
         curl -x PUT \
-         -H "Content-Type: application/json" \
-         -d '{ \
-          "deploymentId": "$DEPLOYMENT_ID", \
-          "deploymentSecret": "$DEPLOYMENT_SECRET" \
-          "branchName": "TEMP-DEPLOYMENT-$RUN_ID" \
-         }' "$WEBHOOK_URL"
+          -H "Content-Type: application/json" \
+          -d '{ \
+            "deploymentId": "${DEPLOYMENT_ID}", \
+            "deploymentSecret": "${DEPLOYMENT_SECRET}" \
+            "branchName": "${BRANCH_NAME}" \
+            "commitSha": "${COMMIT_SHA}" \
+          }' "${WEBHOOK_URL}"
     
     - name: Cleanup Temp Branch
       shell: bash
+      if: ${{ !always() && steps.push-temp-branch.conclusion == 'success' }}
       env:
-        RUN_ID: ${{ github.run_id }}
+        BRANCH_NAME: ${{ steps.push-temp-branch.outputs.branch-name }}
       run: |
         git checkout main -f
-        git branch -D "TEMP-DEPLOYMENT-$RUN_ID"
-        git push origin --delete "TEMP-DEPLOYMENT-$RUN_ID"
+        git branch -D "${BRANCH_NAME}"
+        git push origin --delete "${BRANCH_NAME}"
       

@@ -11,7 +11,7 @@ def deploy_website(inputs: WebsiteBody):
   if not deployment or deployment.secret != inputs.deployment_secret:
     raise HTTPException(status_code=403)
   
-  pull_temp_branch(inputs.branch_name, deployment)
+  pull_temp_branch(inputs.branch_name, inputs.commit_sha, deployment)
 
   return WebsiteResponse(result="success")
 

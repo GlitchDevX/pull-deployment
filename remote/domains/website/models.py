@@ -7,6 +7,7 @@ class WebsiteBody(BaseBody):
   deployment_id: str = Field(description="Identifier of deployment to trigger")
   deployment_secret: str = Field(description="Secret of deployment to trigger") # maybe move to header
   branch_name: str = Field(description="Name of the temporary branch the content was pushed to")
+  commit_sha: str = Field(description="SHA of the exact commit on the temporary branch")
 
 class WebsiteResponse(BaseBody):
   result: str
