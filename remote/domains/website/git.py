@@ -12,17 +12,17 @@ def pull_temp_branch(branch_name: str, commit_sha: str, deployment: Deployment):
 def _pull_to_temp_dir(tmp_dir: str, branch_name: str, commit_sha: str, deployment: Deployment):
   credentials_prefix = (f"{deployment.access_token}@" if deployment.access_token else "")
   clone_url = f"https://{credentials_prefix}{deployment.remote}"
-  
+
   clone_args = ["git", "clone", "--single-branch", "-b", branch_name, "--depth", "1", clone_url, "."]
   clone_result = subprocess.run(clone_args, cwd=tmp_dir)
 
   # checkout exact commit to ignore malicious commits the temp branch
   fetch_result = subprocess.run(["git", "fetch", "--depth", "1", "origin", commit_sha], cwd=tmp_dir)
   checkout_result = subprocess.run(["git", "checkout", commit_sha], cwd=tmp_dir)
-  
+
   if clone_result.returncode != 0 or fetch_result.returncode != 0 or checkout_result.returncode != 0:
-    raise HTTPException(status_code=404, detail="Temporary branch or commitSha not found")
-  
+    raise HTTPException(status_code=404, detail="Temporary branch or commit sha not found")
+
   shutil.rmtree(f"{tmp_dir}/.git", ignore_errors=True)
 
 def _copy_to_target_dir(tmp_dir: str, target_dir: str):

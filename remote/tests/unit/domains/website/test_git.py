@@ -89,6 +89,7 @@ def test_should_handle_non_existent_branch(mocker: MockerFixture, mock_subproces
     mock_rmtree.assert_not_called()
     mock_copytree.assert_not_called()
     assert err.value.status_code == 404
+    assert err.value.detail == "Temporary branch or commit sha not found"
 
 
 def assert_git_subprocess_calls(mocker: MockerFixture, subprocess_mock: MagicMock, branch_name: str, commit_sha: str,
