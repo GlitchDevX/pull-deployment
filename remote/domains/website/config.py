@@ -5,7 +5,7 @@ from domains.website.models import AppConfig
 import yaml
 
 
-def load_config(path: str = "config.yml") -> AppConfig:
+def load_config(path: str = "config/config.yml") -> AppConfig:
     parsed_yaml = _load_yaml(path)
     try:
         return AppConfig(**parsed_yaml)
