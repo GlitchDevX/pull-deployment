@@ -7,10 +7,7 @@ from pytest_mock import MockerFixture
 
 def mock_open(mocker: MockerFixture, content: str):
     mock = mocker.patch("builtins.open")
-    mock.return_value = mocker.Mock(
-        __enter__=mocker.Mock(return_value=content),
-        __exit__=mocker.Mock()
-    )
+    mock.return_value.__enter__.return_value = content
     return mock
 
 def test_should_load_config(mocker: MockerFixture):
