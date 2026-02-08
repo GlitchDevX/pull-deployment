@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from fastapi.exceptions import HTTPException
 
 from domains.shared.logger import logger
-from domains.website.models import AppConfig
+from domains.website.internal.models import AppConfig
 
 
 def load_config(path: str = "config/config.yml") -> AppConfig:

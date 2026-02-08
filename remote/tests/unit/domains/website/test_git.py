@@ -3,11 +3,11 @@ from coveo_ref import ref
 from unittest.mock import MagicMock
 
 from fastapi.exceptions import HTTPException
-from domains.website.models import Deployment
-from domains.website.git import pull_temp_branch
+from domains.website.internal.models import Deployment
+from domains.website.internal.git import pull_temp_branch
 from pytest_mock import MockerFixture
 
-from domains.website.git import subprocess, tempfile, shutil
+from domains.website.internal.git import subprocess, tempfile, shutil
 
 TMP_TEST_DIR = "/tmp/test_dir"
 

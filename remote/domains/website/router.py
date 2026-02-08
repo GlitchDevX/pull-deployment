@@ -1,5 +1,5 @@
-from domains.website.service import deploy_website
-from domains.website.models import WebsiteBody
+from domains.website.internal.service import deploy_website
+from domains.website.internal.models import WebsiteBody
 from fastapi import APIRouter
 
 router = APIRouter()

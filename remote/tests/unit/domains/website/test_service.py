@@ -3,9 +3,9 @@ from coveo_ref import ref
 from fastapi import HTTPException
 from pytest_mock import MockerFixture
 
-from domains.website import service
-from domains.website.service import deploy_website
-from domains.website.models import Deployment, WebsiteBody
+from domains.website.internal import service
+from domains.website.internal.service import deploy_website
+from domains.website.internal.models import Deployment, WebsiteBody
 
 
 @pytest.fixture

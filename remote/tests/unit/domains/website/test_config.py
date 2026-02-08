@@ -1,7 +1,7 @@
 import pytest
 from fastapi.exceptions import HTTPException
 
-from domains.website.config import load_config
+from domains.website.internal.config import load_config
 from pytest_mock import MockerFixture
 
 

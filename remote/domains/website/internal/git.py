@@ -2,7 +2,7 @@ import tempfile
 import subprocess
 import shutil
 from fastapi.exceptions import HTTPException
-from domains.website.models import Deployment
+from domains.website.internal.models import Deployment
 
 def pull_temp_branch(branch_name: str, commit_sha: str, deployment: Deployment):
   with tempfile.TemporaryDirectory() as tmp_dir:

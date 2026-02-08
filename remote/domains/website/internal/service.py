@@ -1,9 +1,9 @@
 from fastapi import HTTPException
-from domains.website.git import pull_temp_branch
-from domains.website.models import WebsiteResponse
-from domains.website.config import load_config
-from domains.website.models import Deployment
-from domains.website.models import WebsiteBody
+from domains.website.internal.git import pull_temp_branch
+from domains.website.internal.models import WebsiteResponse
+from domains.website.internal.config import load_config
+from domains.website.internal.models import Deployment
+from domains.website.internal.models import WebsiteBody
 
 def deploy_website(inputs: WebsiteBody):
   deployment = _get_deployment_by_id(inputs.deployment_id)
