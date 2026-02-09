@@ -28,6 +28,9 @@ runs:
       run: |
         mv "$TARGET_DIR" .temp-deployment
         
+        git config --global user.name 'Pull Deployment Action' 
+        git config --global user.email 'private@glitchdev.me'
+        
         branch_name="TEMP-DEPLOYMENT-${RUN_ID}"
         git checkout --orphan "${branch_name}"
         
