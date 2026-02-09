@@ -25,13 +25,14 @@ runs:
       env:
         TARGET_DIR: ${{ inputs.target-dir }}
         RUN_ID: ${{ github.run_id }}
+        RUN_ATTEMPT: ${{ github.run_attempt }}
       run: |
         mv "$TARGET_DIR" .temp-deployment
         
         git config --global user.name 'Pull Deployment Action' 
         git config --global user.email 'private@glitchdev.me'
         
-        branch_name="TEMP-DEPLOYMENT-${RUN_ID}"
+        branch_name="TEMP-DEPLOYMENT-${RUN_ID}-${RUN_ATTEMPT}"
         git checkout --orphan "${branch_name}"
         
         git reset
