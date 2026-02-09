@@ -51,7 +51,7 @@ runs:
         BRANCH_NAME: ${{ steps.push-temp-branch.outputs.branch-name }}
         COMMIT_SHA: ${{ steps.push-temp-branch.outputs.commit-sha }}
       run: |
-        curl -x PUT \
+        curl -X PUT \
           -H "Content-Type: application/json" \
           -d '{ \
             "deploymentId": "${DEPLOYMENT_ID}", \
