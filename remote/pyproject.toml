@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "coveo-ref>=2.0.1",
+    "fastapi-limiter>=0.2.0",
     "fastapi[standard]>=0.128.0",
     "frozendict>=2.4.7",
     "pytest>=9.0.2",
