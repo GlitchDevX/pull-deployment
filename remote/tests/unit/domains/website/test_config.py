@@ -24,7 +24,7 @@ def test_should_load_config(mocker: MockerFixture):
     """.strip()
     mock_open(mocker, given_config)
 
-    result = load_config()
+    result = load_config("valid_config")
 
     assert len(result.deployments) == 2
     assert result.deployments[0].id == "example-deployment"
@@ -39,7 +39,7 @@ def test_should_handle_invalid_config(mocker: MockerFixture):
     mock_open(mocker, given_config)
 
     with pytest.raises(HTTPException) as err:
-        load_config()
+        load_config("invalid_config")
 
     assert err.value.status_code == 500
     assert err.value.detail == "Could not load deployment config. See application logs for details"
