@@ -22,4 +22,5 @@ class Deployment(BaseModel):
   target_dir: str = Field(description="Target directory to place the content of the temporary branch to")
 
 class AppConfig(BaseModel):
+class WebsiteConfig(BaseModel):
   deployments: List[Deployment] = Field(description="List of deployments that you can trigger")

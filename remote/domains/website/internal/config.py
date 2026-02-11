@@ -7,17 +7,17 @@ from pydantic import ValidationError
 from fastapi.exceptions import HTTPException
 
 from domains.shared.logger import logger
-from domains.website.internal.models import AppConfig
+from domains.website.internal.models import WebsiteConfig
 
 
-def load_config(path: str = "config/config.yml") -> AppConfig:
+def load_config(path: str = "config/website.yml") -> WebsiteConfig:
     parsed_yaml = _load_yaml(path)
     return _parse_config(path, parsed_yaml)
 
 @lru_cache
-def _parse_config(path: str, content: frozendict) -> AppConfig:
+def _parse_config(path: str, content: frozendict) -> WebsiteConfig:
     try:
-        return AppConfig(**content)
+        return WebsiteConfig(**content)
     except (ValidationError, TypeError) as err:
         _load_yaml.cache_clear()
         logger.error(f"Config at '{path}' is invalid.\n{str(err)}")
@@ -29,6 +29,5 @@ def _parse_config(path: str, content: frozendict) -> AppConfig:
 
 @lru_cache
 def _load_yaml(path: str) -> frozendict:
-    print("called fs read")
     with open(path) as file:
         return deepfreeze(yaml.safe_load(file))
