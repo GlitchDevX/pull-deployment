@@ -21,6 +21,10 @@ class Deployment(BaseModel):
 
   target_dir: str = Field(description="Target directory to place the content of the temporary branch to")
 
-class AppConfig(BaseModel):
+class RateLimit(BaseModel):
+  amount: int = Field(default=5, description="Amount of requests allowed per interval")
+  interval_minutes: float = Field(default=1, description="Duration of a rate limiting interval in minutes")
+
 class WebsiteConfig(BaseModel):
   deployments: List[Deployment] = Field(description="List of deployments that you can trigger")
+  rate_limit: RateLimit = Field(default=RateLimit(), description="Rate limit settings")

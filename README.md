@@ -13,9 +13,3 @@ without directly connecting to the webserver.
 
 ## Setup
 
-
-## Todos
-
-- Add ratelimit especially for authentication
-- Add singleton of sort for config loading
-- Make rate limit configurable
