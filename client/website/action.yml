@@ -59,7 +59,7 @@ runs:
             "deploymentSecret": "${DEPLOYMENT_SECRET}" \
             "branchName": "${BRANCH_NAME}" \
             "commitSha": "${COMMIT_SHA}" \
-          }' "${WEBHOOK_URL}"
+          }' "${WEBHOOK_URL}/deploy-website"
     
     - name: Cleanup Temp Branch
       shell: bash
