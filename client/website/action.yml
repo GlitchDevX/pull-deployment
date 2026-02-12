@@ -52,15 +52,27 @@ runs:
         BRANCH_NAME: ${{ steps.push-temp-branch.outputs.branch-name }}
         COMMIT_SHA: ${{ steps.push-temp-branch.outputs.commit-sha }}
       run: |
-        curl -X PUT \
+        response=$(curl -X PUT \
+          -s -w "\n${http_code}" \
           -H "Content-Type: application/json" \
           -d '{ \
             "deploymentId": "${DEPLOYMENT_ID}", \
             "deploymentSecret": "${DEPLOYMENT_SECRET}" \
             "branchName": "${BRANCH_NAME}" \
             "commitSha": "${COMMIT_SHA}" \
-          }' "${WEBHOOK_URL}/deploy-website"
+          }' "${WEBHOOK_URL}/deploy-website")
     
+        response_code=$(tail -n1 <<< "$response")
+        response_content=$(sed '$ d' <<< "$response")
+
+        if [[ response_code == "200" ]]; then
+          echo "Successfully deployed website"
+          echo "$response_content"
+        else
+          echo "::error::Failed to deploy website with status code: $response_code"
+          echo "$response_content"
+          exit 1
+        fi
     - name: Cleanup Temp Branch
       shell: bash
       if: ${{ always() && steps.push-temp-branch.conclusion == 'success' }}
