@@ -63,7 +63,7 @@ runs:
     
     - name: Cleanup Temp Branch
       shell: bash
-      if: ${{ !always() && steps.push-temp-branch.conclusion == 'success' }}
+      if: ${{ always() && steps.push-temp-branch.conclusion == 'success' }}
       env:
         BRANCH_NAME: ${{ steps.push-temp-branch.outputs.branch-name }}
       run: |
