@@ -27,7 +27,8 @@ runs:
         RUN_ID: ${{ github.run_id }}
         RUN_ATTEMPT: ${{ github.run_attempt }}
       run: |
-        mv "$TARGET_DIR" .temp-deployment
+        repo_root=$(git rev-parse --show-toplevel)
+        mv "$TARGET_DIR" "${repo_root}/.temp-deployment"
         
         git config --global user.name 'Pull Deployment Action' 
         git config --global user.email 'private@glitchdev.me'
@@ -36,7 +37,7 @@ runs:
         git checkout --orphan "${branch_name}"
         
         git reset
-        git add -f .temp-deployment
+        git add -f "${repo_root}/.temp-deployment"
         git commit -m "chore: create temporary deployment branch" | head -n2
         git push origin "${branch_name}"
         
