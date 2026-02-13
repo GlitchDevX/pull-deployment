@@ -36,7 +36,7 @@ runs:
         git checkout --orphan "${branch_name}"
         
         git reset
-        git add .temp-deployment
+        git add -f .temp-deployment
         git commit -m "chore: create temporary deployment branch" | head -n2
         git push origin "${branch_name}"
         
