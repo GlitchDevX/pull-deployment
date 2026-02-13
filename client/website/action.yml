@@ -37,7 +37,7 @@ runs:
         
         git reset
         git add .temp-deployment
-        git commit -m "chore: create temporary deployment branch"
+        git commit -m "chore: create temporary deployment branch" | head -n2
         git push origin "${branch_name}"
         
         echo "branch-name=${branch_name}" >> $GITHUB_OUTPUT
