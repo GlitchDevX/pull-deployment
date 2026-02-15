@@ -419,20 +419,28 @@ name = "pull-deployment-remote"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "coveo-ref" },
     { name = "fastapi", extra = ["standard"] },
     { name = "fastapi-limiter" },
     { name = "frozendict" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "coveo-ref" },
     { name = "pytest" },
     { name = "pytest-mock" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "coveo-ref", specifier = ">=2.0.1" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.128.0" },
     { name = "fastapi-limiter", specifier = ">=0.2.0" },
     { name = "frozendict", specifier = ">=2.4.7" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "coveo-ref", specifier = ">=2.0.1" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-mock", specifier = ">=3.15.1" },
 ]
