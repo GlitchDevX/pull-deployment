@@ -19,7 +19,7 @@ jobs:
           manifest-file: .release-please-manifest.json
       - name: Print Release Details
         run: |
-          echo "${{ steps.release-please.outputs }}"
+          echo "${{ toJson(steps.release-please.outputs) }}"
 
   test-remote:
     runs-on: ubuntu-latest
