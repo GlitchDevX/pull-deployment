@@ -60,8 +60,8 @@ runs:
           -H "Content-Type: application/json" \
           -d "{ \
             \"deploymentId\": \"${DEPLOYMENT_ID}\", \
-            \"deploymentSecret\": \"${DEPLOYMENT_SECRET}\" \
-            \"branchName\": \"${BRANCH_NAME}\" \
+            \"deploymentSecret\": \"${DEPLOYMENT_SECRET}\", \
+            \"branchName\": \"${BRANCH_NAME}\", \
             \"commitSha\": \"${COMMIT_SHA}\" \
           }" "${WEBHOOK_URL}/deploy-website")
     
