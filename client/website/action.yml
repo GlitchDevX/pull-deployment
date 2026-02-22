@@ -27,6 +27,8 @@ runs:
         RUN_ID: ${{ github.run_id }}
         RUN_ATTEMPT: ${{ github.run_attempt }}
       run: |
+        set -o xtrace # debugging
+
         repo_root=$(git rev-parse --show-toplevel)
         mv "$TARGET_DIR" "${repo_root}/.temp-deployment"
         
