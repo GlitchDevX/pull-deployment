@@ -68,7 +68,7 @@ runs:
         response_code=$(tail -n1 <<< "$response")
         response_content=$(sed '$ d' <<< "$response")
 
-        if [[ response_code == "200" ]]; then
+        if [[ $response_code == "200" ]]; then
           echo "Successfully deployed website"
           echo "$response_content" | jq
         else
