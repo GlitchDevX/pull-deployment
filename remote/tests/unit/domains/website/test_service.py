@@ -22,8 +22,22 @@ def mock_load_config(mocker: MockerFixture):
     ]
     return mock
 
-def test_should_deploy_website(mock_load_config):
-    pass
+@pytest.fixture
+def mock_pull_temp_branch(mocker: MockerFixture):
+    yield mocker.patch(*ref(service.pull_temp_branch, context=service.deploy_website))
+
+def test_should_deploy_website(mock_load_config, mock_pull_temp_branch):
+    given_input = WebsiteBody(
+        deployment_id="example-deployment",
+        deployment_secret="example-secret",
+        branch_name="main",
+        commit_sha="some-sha"
+    )
+
+    result = deploy_website(given_input)
+
+    assert result.result == "success"
+
 
 def test_should_handle_invalid_secret(mock_load_config):
     given_input = WebsiteBody(
