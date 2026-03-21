@@ -8,6 +8,7 @@ dependencies = [
     "fastapi-limiter>=0.2.0",
     "fastapi[standard]>=0.128.0",
     "frozendict>=2.4.7",
+    "python-on-whales>=0.81.0",
 ]
 
 [dependency-groups]
