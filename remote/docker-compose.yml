@@ -1,0 +1,14 @@
+# this file is not intended for actual use and rather for testing locally
+services:
+  pull-deployment:
+    image: glitchdevx/pull-deployment:latest
+    ports:
+      - "8000:8080"
+    volumes:
+      - type: bind
+        source: ./config
+        target: /config
+        read_only: true
+      - type: bind
+        source: /var/www/
+        target: /var/www/
