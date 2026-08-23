@@ -2,17 +2,33 @@
 
 Deploy in seconds using pull-based-deployment.
 
-This tool allows you, to deploy your web-apps by pulling the content from a temporary branch.
+This tool allows you, to deploy your web-apps by pulling the content from a temporary git branch.
 
-This has the benefit that you do not need to share a private key.
+This has the benefit that you do not need to directly connect to your server therefore not sharing a private key.
 
 
 ## How it works
 
-1. The client (CI) will create a temporary branch with the web-app you want to deploy
+1. The client will create a temporary branch with the web-app you want to deploy
 2. Then call the webhook on the remote server you want to deploy to
 3. The remote will pull the temporary branch to the configured target dir
 4. The client will delete the temporary branch
+
+
+## Usage
+
+```yml
+- name: Deploy Website
+  uses: glitchdevx/pull-deployment/client/website@main
+  with:
+    target-dir: dist
+    deployment-id: ${{ secrets.DEPLOYMENT_ID }}
+    deployment-secret: ${{ secrets.DEPLOYMENT_SECRET }}
+    webhook-url: ${{ secrets.DEPLOYMENT_URL }}
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
 
 ## Setup Remote
 
@@ -24,13 +40,14 @@ You'll need to have [Docker](https://docs.docker.com/engine/install/) installed.
    services:
      pull-deployment:
        image: "glitchdevx/pull-deployment:latest"
-       ports: ["127.0.0.1:8080:8080"]
+       ports: ["127.0.0.1:<your-port>:8080"]
        volumes:
          - "./config:/config:ro"
          - "/var/www:/var/www"
    ```
    > [!IMPORTANT]
-   > With port forwarding like this, you'll need to add [your own reverse proxy](###own-reverse-proxy) in front of it
+   > With port forwarding like this, you'll need to add [your own reverse proxy](#reverse-proxy)
+   > to map the local port to a public one using HTTPS
 
    > [!TIP]
    > You can replace the `/var/www` volumes with more fine grained volumes for each website
@@ -52,21 +69,29 @@ You'll need to have [Docker](https://docs.docker.com/engine/install/) installed.
    openssl rand -base64 96
    ```
 
-## Usage
 
-```yml
-- name: Deploy Website
-  uses: glitchdevx/pull-deployment/client/website@main
-  with:
-    target-dir: dist
-    deployment-id: ${{ secrets.DEPLOYMENT_ID }}
-    deployment-secret: ${{ secrets.DEPLOYMENT_SECRET }}
-    webhook-url: ${{ secrets.DEPLOYMENT_URL }}
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+### Reverse Proxy
+
+As this tool is used to deploy web-apps this section will
+assume you have a web server (like Nginx or Caddy) set up and running with SSL.
+
+
+#### Nginx
+
+If you use nginx you will need a config something like this:
+
+```nginx
+server {
+  listen [::]:443 ssl;
+  listen 443 ssl;
+
+  server_name <your hostname>;
+
+  location / {
+    include /etc/nginx/includes/proxy.conf;
+    proxy_pass http://127.0.0.1:<local pull-deployment port>;
+  }
+  ssl_certificate <path to cert>;
+  ssl_certificate_key <path to cert key>;
+}
 ```
-
-
-### Own Reverse Proxy
-
-TBD
