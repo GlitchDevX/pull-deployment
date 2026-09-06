@@ -29,6 +29,13 @@ This has the benefit that you do not need to directly connect to your server the
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+To push the temp branch, your GitHub action token needs to have the `contents: write` permission.
+
+```yml
+permissions:
+  contents: write
+```
+
 
 ## Setup Remote
 
