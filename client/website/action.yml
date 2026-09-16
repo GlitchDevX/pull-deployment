@@ -15,6 +15,10 @@ inputs:
   webhook-url:
     description: 'Url of the webhook remote'
     required: true
+  debug-keep-branch:
+    description: 'Debug flag to not clean up temp branch after deployment'
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -76,7 +80,7 @@ runs:
         fi
     - name: Cleanup Temp Branch
       shell: bash
-      if: ${{ always() && steps.push-temp-branch.conclusion == 'success' }}
+      if: ${{ always() && steps.push-temp-branch.conclusion == 'success' && inputs.debug-keep-branch == 'true' }}
       env:
         BRANCH_NAME: ${{ steps.push-temp-branch.outputs.branch-name }}
       run: |
