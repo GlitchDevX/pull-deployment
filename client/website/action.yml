@@ -41,7 +41,7 @@ runs:
         git checkout --orphan "${branch_name}"
         
         git reset
-        git add -f "${repo_root}/.temp-deployment"
+        git add -f "${repo_root}/.temp-deployment/**"
         (r=$(git commit -m "chore: create temporary deployment branch" 2>&1) && echo "$r" | sed '1,2!d' || { echo "$r"; exit 1; })
         git push origin "${branch_name}"
         
